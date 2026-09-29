@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PressPause</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <p class="eyebrow">Deep work rhythm</p>
+        <h1>PressPause</h1>
+      </header>
+
+      <section class="timer-card">
+        <div class="timer-label" id="timerLabel">Work session</div>
+        <div id="countdown" class="countdown">02:00:00</div>
+        <div id="status" class="status">Ready</div>
+      </section>
+
+      <section class="settings-panel">
+        <div class="field-row">
+          <label for="workMinutes">Work minutes</label>
+          <input id="workMinutes" type="number" min="1" max="600" value="120" />
+        </div>
+        <div class="field-row">
+          <label for="breakMinutes">Break minutes</label>
+          <input id="breakMinutes" type="number" min="1" max="180" value="5" />
+        </div>
+        <div class="field-row full-width">
+          <label for="presetSelect">Quick preset</label>
+          <select id="presetSelect">
+            <option value="">Choose a rhythm</option>
+            <option value="deep">Deep work - 120 / 10</option>
+            <option value="standard">Standard - 50 / 10</option>
+            <option value="quick">Quick focus - 25 / 5</option>
+          </select>
+        </div>
+        <div class="field-row full-width">
+          <label for="reminderMessage">Reminder message</label>
+          <input id="reminderMessage" type="text" maxlength="100" value="Step away, stretch, drink water, or rest." />
+        </div>
+        <label class="checkbox-row">
+          <input id="soundToggle" type="checkbox" checked />
+          <span>Sound alert when timer ends</span>
+        </label>
+        <div class="field-row full-width">
+          <label for="soundSelect">Alert sound</label>
+          <select id="soundSelect">
+            <option value="chime">Soft chime</option>
+            <option value="double">Double chime</option>
+            <option value="low">Low tone</option>
+          </select>
+          <button id="previewSoundBtn" class="ghost" type="button">Preview sound</button>
+        </div>
+      </section>
+
+      <div class="button-row">
+        <button id="startBtn" class="primary" type="button">Start</button>
+        <button id="pauseBtn" class="secondary" type="button" disabled>Pause</button>
+      </div>
+      <div class="button-row">
+        <button id="resetBtn" class="ghost" type="button">Reset</button>
+        <button id="breakBtn" class="accent" type="button">Take break</button>
+      </div>
+
+      <section id="reminderBanner" class="reminder-banner" role="status" aria-live="polite" hidden>
+        <div>
+          <strong>Time to pause</strong>
+          <p id="reminderBannerMessage"></p>
+        </div>
+        <div class="banner-actions">
+          <button id="snoozeFiveBtn" class="banner-dismiss" type="button">+5 min</button>
+          <button id="snoozeTenBtn" class="banner-dismiss" type="button">+10 min</button>
+          <button id="dismissBannerBtn" class="banner-dismiss" type="button">Dismiss</button>
+        </div>
+      </section>
+
+      <section class="stats-panel">
+        <div class="stats-row">
+          <div class="stat-box"><span>Today</span><strong id="todayValue">0</strong></div>
+        </div>
+        <div class="category-grid">
+          <div class="category-card"><div class="card-head"><span>Work</span><strong id="workCount">0</strong></div><div class="card-foot"><button class="mini-btn" data-category="work" type="button">+1</button></div></div>
+          <div class="category-card"><div class="card-head"><span>Exercise</span><strong id="exerciseCount">0</strong></div><div class="card-foot"><button class="mini-btn" data-category="exercise" type="button">+1</button></div></div>
+          <div class="category-card"><div class="card-head"><span>Meal</span><strong id="mealCount">0</strong></div><div class="card-foot"><button class="mini-btn" data-category="meal" type="button">+1</button></div></div>
+        </div>
+        <button id="resetTodayBtn" class="ghost reset-today" type="button">Reset today</button>
+      </section>
+
+      <section class="checklist-panel">
+        <div class="section-heading">
+          <h2>Break checklist</h2>
+          <span>Pick what helps</span>
+        </div>
+        <label class="activity-option"><input type="checkbox" data-activity="stretch" /> Stretch</label>
+        <label class="activity-option"><input type="checkbox" data-activity="water" /> Drink water</label>
+        <label class="activity-option"><input type="checkbox" data-activity="walk" /> Walk around</label>
+        <label class="activity-option"><input type="checkbox" data-activity="eyes" /> Rest your eyes</label>
+      </section>
+
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

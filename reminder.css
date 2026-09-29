@@ -1,0 +1,50 @@
+:root {
+  color-scheme: dark;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: #0b1120;
+  color: #e5e7eb;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  display: grid;
+  min-height: 100vh;
+  margin: 0;
+  place-items: center;
+  background: radial-gradient(circle at top, #2c1d54, #0b1120 65%);
+}
+
+.reminder-card {
+  width: min(100%, 440px);
+  padding: 34px;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #a5b4cf;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+h1 { margin: 0; color: #fbbf24; font-size: 30px; }
+
+#message { margin: 16px auto 28px; color: #e5e7eb; font-size: 16px; line-height: 1.5; }
+
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 13px;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.primary { background: #8b5cf6; }
+.secondary { background: #26354d; }

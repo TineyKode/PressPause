@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "PressPause",
+  "version": "1.0.0",
+  "description": "A focused work rhythm timer with break reminders.",
+  "permissions": ["alarms", "notifications", "storage"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "PressPause",
+    "default_popup": "popup.html"
+  }
+}
