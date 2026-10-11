@@ -28,7 +28,9 @@ const workCountEl = document.getElementById('workCount');
 const exerciseCountEl = document.getElementById('exerciseCount');
 const mealCountEl = document.getElementById('mealCount');
 const resetTodayBtn = document.getElementById('resetTodayBtn');
+const streakValueEl = document.getElementById('streakValue');
 const checklistInputs = [...document.querySelectorAll('[data-activity]')];
+const CHECKLIST_KEYS = ['stretch', 'water', 'walk', 'eyes'];
 
 let mode = 'work';
 let isRunning = false;
@@ -41,6 +43,8 @@ let activityState = {
   today: 0,
   categories: { work: 0, exercise: 0, meal: 0 },
   checklist: { stretch: true, water: true, walk: false, eyes: true },
+  streak: 0,
+  lastGoalDate: null,
 };
 
 function storageGet(key) {
@@ -86,6 +90,45 @@ function scheduleAlarm(name, when) {
 
 function todayKey() {
   return new Date().toISOString().slice(0, 10);
+}
+
+function previousDate(dateStr) {
+  const date = new Date(`${dateStr}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() - 1);
+  return date.toISOString().slice(0, 10);
+}
+
+function checklistComplete(checklist) {
+  return CHECKLIST_KEYS.every((key) => checklist?.[key] === true);
+}
+
+function withStreak(state) {
+  const next = {
+    ...state,
+    streak: Number(state.streak) || 0,
+    lastGoalDate: state.lastGoalDate || null,
+  };
+  if (!checklistComplete(next.checklist) || next.lastGoalDate === next.date) return next;
+  const continued = next.lastGoalDate === previousDate(next.date);
+  return {
+    ...next,
+    lastGoalDate: next.date,
+    streak: continued ? next.streak + 1 : 1,
+  };
+}
+
+function freshActivity(previous) {
+  const today = todayKey();
+  const lastGoalDate = previous?.lastGoalDate || null;
+  const kept = lastGoalDate === previousDate(today);
+  return {
+    date: today,
+    today: 0,
+    categories: { work: 0, exercise: 0, meal: 0 },
+    checklist: { stretch: true, water: true, walk: false, eyes: true },
+    lastGoalDate,
+    streak: kept ? Number(previous?.streak) || 0 : 0,
+  };
 }
 
 function formatDuration(durationMs) {
@@ -167,18 +210,21 @@ function applyTimerState(saved) {
 
 function applyActivityState(saved) {
   if (!saved) return;
-  if (saved.date !== todayKey()) {
-    storageSet(ACTIVITY_STORAGE_KEY, activityState);
+  if (!saved.date || saved.date !== todayKey()) {
+    activityState = freshActivity(saved);
+    saveActivity();
     return;
   }
 
-  activityState = {
+  activityState = withStreak({
     ...activityState,
     ...saved,
     today: Number(saved.today) || 0,
     categories: { ...activityState.categories, ...(saved.categories || {}) },
     checklist: { ...activityState.checklist, ...(saved.checklist || {}) },
-  };
+    streak: Number(saved.streak) || 0,
+    lastGoalDate: saved.lastGoalDate || null,
+  });
 }
 
 function saveActivity() {
@@ -187,6 +233,7 @@ function saveActivity() {
 
 function renderActivity() {
   todayValueEl.textContent = activityState.today;
+  streakValueEl.textContent = activityState.streak || 0;
   workCountEl.textContent = activityState.categories.work;
   exerciseCountEl.textContent = activityState.categories.exercise;
   mealCountEl.textContent = activityState.categories.meal;
@@ -285,6 +332,8 @@ resetTodayBtn.addEventListener('click', () => {
     today: 0,
     categories: { work: 0, exercise: 0, meal: 0 },
     checklist: { stretch: true, water: true, walk: false, eyes: true },
+    lastGoalDate: activityState.lastGoalDate,
+    streak: activityState.streak || 0,
   };
   saveActivity();
   renderActivity();
@@ -303,6 +352,7 @@ document.querySelectorAll('[data-category]').forEach((button) => {
 checklistInputs.forEach((input) => {
   input.addEventListener('change', () => {
     activityState.checklist[input.dataset.activity] = input.checked;
+    activityState = withStreak(activityState);
     saveActivity();
   });
 });

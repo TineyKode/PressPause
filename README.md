@@ -11,6 +11,7 @@ PressPause is a Manifest V3 browser extension for scheduling work breaks and tra
 - Custom reminder message
 - Break checklist for stretching, water, walking, and eye rest
 - Simple daily activity tracking
+- Streak that increases once each day the break checklist is completed
 
 ## Load the extension
 
